@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="App_Title"><value>TV Audio Mirror</value></data>
+  <data name="Info_Text"><value>Esta aplicación copia el audio del dispositivo de reproducción predeterminado a la primera salida cuyo nombre contiene "TV". Si el dispositivo predeterminado ya es una TV, no se hace nada.</value></data>
+  <data name="Label_Source_Unknown"><value>Fuente actual: (desconocida)</value></data>
+  <data name="Label_Source_Error"><value>Fuente actual: (error)</value></data>
+  <data name="Label_Source_Value"><value>Fuente actual: {0}</value></data>
+  <data name="Label_Tv_NotFound"><value>TV de destino: (no encontrada)</value></data>
+  <data name="Label_Tv_DefaultIsTV"><value>TV de destino: (el dispositivo predeterminado ya es una TV)</value></data>
+  <data name="Label_Tv_Value"><value>TV de destino: {0}</value></data>
+  <data name="Button_Mute"><value>Silenciar TV</value></data>
+  <data name="Check_Auto"><value>Actualizar cuando cambie el dispositivo predeterminado</value></data>
+  <data name="Button_SoundSettings"><value>Abrir configuración de sonido</value></data>
+  <data name="Tray_Open"><value>Abrir</value></data>
+  <data name="Tray_Exit"><value>Salir</value></data>
+  <data name="Confirm_Exit_Title"><value>Confirmar</value></data>
+  <data name="Confirm_Exit_Text"><value>¿Seguro que quieres cerrar TV Audio Mirror?</value></data>
+  <data name="Log_DefaultChanged"><value>Dispositivo de reproducción predeterminado cambiado: {0}</value></data>
+  <data name="Log_DefaultReadError"><value>No se puede leer el dispositivo predeterminado.</value></data>
+  <data name="Log_DefaultIsTv"><value>El dispositivo predeterminado ya es una TV. Duplicación desactivada.</value></data>
+  <data name="Log_NoTvFound"><value>No se ha encontrado ninguna salida que contenga "TV". Cámbiale el nombre en la configuración de sonido.</value></data>
+  <data name="Log_CaptureStarted"><value>Duplicación iniciada: {0} → {1}</value></data>
+  <data name="Log_CaptureError"><value>No se pudo iniciar la duplicación.</value></data>
+  <data name="Log_TimerError"><value>Error al comprobar los dispositivos de audio.</value></data>
+  <data name="Log_OpenSoundError"><value>No se pudo abrir la configuración de sonido.</value></data>
+  <data name="Log_Mute"><value>TV silenciada = {0}</value></data>
+  <data name="Log_MuteError"><value>No se pudo silenciar la TV.</value></data>
+  <data name="Log_Volume"><value>Volumen de la TV = {0}%</value></data>
+  <data name="Log_VolumeError"><value>No se pudo cambiar el volumen de la TV.</value></data>
+</root>

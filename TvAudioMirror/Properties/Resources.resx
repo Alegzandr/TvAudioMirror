@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value></resheader>
+
+  <data name="App_Title" xml:space="preserve">
+    <value>TV Audio Mirror</value>
+  </data>
+  <data name="Info_Text" xml:space="preserve">
+    <value>This app mirrors the audio from your default playback device to the first output whose name contains "TV". If the default device is already a TV, nothing is done.</value>
+  </data>
+  <data name="Label_Source_Unknown" xml:space="preserve">
+    <value>Current source: (unknown)</value>
+  </data>
+  <data name="Label_Source_Error" xml:space="preserve">
+    <value>Current source: (error)</value>
+  </data>
+  <data name="Label_Source_Value" xml:space="preserve">
+    <value>Current source: {0}</value>
+  </data>
+  <data name="Label_Tv_NotFound" xml:space="preserve">
+    <value>Target TV: (not found)</value>
+  </data>
+  <data name="Label_Tv_DefaultIsTV" xml:space="preserve">
+    <value>Target TV: (default device is already a TV)</value>
+  </data>
+  <data name="Label_Tv_Value" xml:space="preserve">
+    <value>Target TV: {0}</value>
+  </data>
+  <data name="Button_Mute" xml:space="preserve">
+    <value>Mute TV</value>
+  </data>
+  <data name="Check_Auto" xml:space="preserve">
+    <value>Auto-refresh when default device changes</value>
+  </data>
+  <data name="Button_SoundSettings" xml:space="preserve">
+    <value>Open sound settings</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Confirm_Exit_Title" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Confirm_Exit_Text" xml:space="preserve">
+    <value>Do you really want to close TV Audio Mirror?</value>
+  </data>
+  <data name="Log_DefaultChanged" xml:space="preserve">
+    <value>Default playback device changed: {0}</value>
+  </data>
+  <data name="Log_DefaultReadError" xml:space="preserve">
+    <value>Cannot read default playback device.</value>
+  </data>
+  <data name="Log_DefaultIsTv" xml:space="preserve">
+    <value>Default playback device is already a TV. Mirroring is disabled.</value>
+  </data>
+  <data name="Log_NoTvFound" xml:space="preserve">
+    <value>No output containing "TV" was found. Rename your TV in sound settings.</value>
+  </data>
+  <data name="Log_CaptureStarted" xml:space="preserve">
+    <value>Mirroring started: {0} → {1}</value>
+  </data>
+  <data name="Log_CaptureError" xml:space="preserve">
+    <value>Could not start mirroring.</value>
+  </data>
+  <data name="Log_TimerError" xml:space="preserve">
+    <value>Error while polling audio devices.</value>
+  </data>
+  <data name="Log_OpenSoundError" xml:space="preserve">
+    <value>Could not open sound settings.</value>
+  </data>
+  <data name="Log_Mute" xml:space="preserve">
+    <value>TV mute = {0}</value>
+  </data>
+  <data name="Log_MuteError" xml:space="preserve">
+    <value>Could not mute TV.</value>
+  </data>
+  <data name="Log_Volume" xml:space="preserve">
+    <value>TV volume = {0}%</value>
+  </data>
+  <data name="Log_VolumeError" xml:space="preserve">
+    <value>Could not change TV volume.</value>
+  </data>
+</root>

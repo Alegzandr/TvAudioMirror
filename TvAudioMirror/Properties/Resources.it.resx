@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="App_Title"><value>TV Audio Mirror</value></data>
+  <data name="Info_Text"><value>Questa app copia l'audio dal dispositivo predefinito alla prima uscita il cui nome contiene "TV". Se il dispositivo predefinito è già una TV, non viene fatto nulla.</value></data>
+  <data name="Label_Source_Unknown"><value>Sorgente attuale: (sconosciuta)</value></data>
+  <data name="Label_Source_Error"><value>Sorgente attuale: (errore)</value></data>
+  <data name="Label_Source_Value"><value>Sorgente attuale: {0}</value></data>
+  <data name="Label_Tv_NotFound"><value>TV di destinazione: (non trovata)</value></data>
+  <data name="Label_Tv_DefaultIsTV"><value>TV di destinazione: (il dispositivo predefinito è già una TV)</value></data>
+  <data name="Label_Tv_Value"><value>TV di destinazione: {0}</value></data>
+  <data name="Button_Mute"><value>Silenzia TV</value></data>
+  <data name="Check_Auto"><value>Aggiorna quando cambia il dispositivo predefinito</value></data>
+  <data name="Button_SoundSettings"><value>Apri impostazioni audio</value></data>
+  <data name="Tray_Open"><value>Apri</value></data>
+  <data name="Tray_Exit"><value>Esci</value></data>
+  <data name="Confirm_Exit_Title"><value>Conferma</value></data>
+  <data name="Confirm_Exit_Text"><value>Vuoi davvero chiudere TV Audio Mirror?</value></data>
+  <data name="Log_DefaultChanged"><value>Dispositivo di riproduzione predefinito cambiato: {0}</value></data>
+  <data name="Log_DefaultReadError"><value>Impossibile leggere il dispositivo predefinito.</value></data>
+  <data name="Log_DefaultIsTv"><value>Il dispositivo predefinito è già una TV. Mirroring disattivato.</value></data>
+  <data name="Log_NoTvFound"><value>Nessuna uscita che contiene "TV" trovata. Rinominala nelle impostazioni audio.</value></data>
+  <data name="Log_CaptureStarted"><value>Mirroring avviato: {0} → {1}</value></data>
+  <data name="Log_CaptureError"><value>Impossibile avviare il mirroring.</value></data>
+  <data name="Log_TimerError"><value>Errore durante il controllo dei dispositivi audio.</value></data>
+  <data name="Log_OpenSoundError"><value>Impossibile aprire le impostazioni audio.</value></data>
+  <data name="Log_Mute"><value>TV muta = {0}</value></data>
+  <data name="Log_MuteError"><value>Impossibile mettere in muto la TV.</value></data>
+  <data name="Log_Volume"><value>Volume TV = {0}%</value></data>
+  <data name="Log_VolumeError"><value>Impossibile modificare il volume della TV.</value></data>
+</root>

@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="App_Title" xml:space="preserve">
+    <value>TV Audio Mirror</value>
+  </data>
+  <data name="Info_Text" xml:space="preserve">
+    <value>Cette application copie le son du périphérique par défaut vers la première sortie dont le nom contient « TV ». Si le périphérique par défaut est déjà une TV, rien n’est fait.</value>
+  </data>
+  <data name="Label_Source_Unknown" xml:space="preserve">
+    <value>Source actuelle : (inconnue)</value>
+  </data>
+  <data name="Label_Source_Error" xml:space="preserve">
+    <value>Source actuelle : (erreur)</value>
+  </data>
+  <data name="Label_Source_Value" xml:space="preserve">
+    <value>Source actuelle : {0}</value>
+  </data>
+  <data name="Label_Tv_NotFound" xml:space="preserve">
+    <value>TV cible : (non trouvée)</value>
+  </data>
+  <data name="Label_Tv_DefaultIsTV" xml:space="preserve">
+    <value>TV cible : (le périphérique par défaut est déjà une TV)</value>
+  </data>
+  <data name="Label_Tv_Value" xml:space="preserve">
+    <value>TV cible : {0}</value>
+  </data>
+  <data name="Button_Mute" xml:space="preserve">
+    <value>Muter la TV</value>
+  </data>
+  <data name="Check_Auto" xml:space="preserve">
+    <value>Actualiser si le périphérique par défaut change</value>
+  </data>
+  <data name="Button_SoundSettings" xml:space="preserve">
+    <value>Ouvrir les paramètres son</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Ouvrir</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Quitter</value>
+  </data>
+  <data name="Confirm_Exit_Title" xml:space="preserve">
+    <value>Confirmer</value>
+  </data>
+  <data name="Confirm_Exit_Text" xml:space="preserve">
+    <value>Voulez-vous vraiment fermer TV Audio Mirror ?</value>
+  </data>
+  <data name="Log_DefaultChanged" xml:space="preserve">
+    <value>Le périphérique de lecture par défaut a changé : {0}</value>
+  </data>
+  <data name="Log_DefaultReadError" xml:space="preserve">
+    <value>Impossible de lire le périphérique par défaut.</value>
+  </data>
+  <data name="Log_DefaultIsTv" xml:space="preserve">
+    <value>Le périphérique par défaut est déjà une TV. Mirroring désactivé.</value>
+  </data>
+  <data name="Log_NoTvFound" xml:space="preserve">
+    <value>Aucune sortie contenant « TV » trouvée. Renommez-la dans les paramètres son.</value>
+  </data>
+  <data name="Log_CaptureStarted" xml:space="preserve">
+    <value>Recopie démarrée : {0} → {1}</value>
+  </data>
+  <data name="Log_CaptureError" xml:space="preserve">
+    <value>Impossible de démarrer la recopie.</value>
+  </data>
+  <data name="Log_TimerError" xml:space="preserve">
+    <value>Erreur lors de la surveillance des périphériques audio.</value>
+  </data>
+  <data name="Log_OpenSoundError" xml:space="preserve">
+    <value>Impossible d’ouvrir les paramètres son.</value>
+  </data>
+  <data name="Log_Mute" xml:space="preserve">
+    <value>TV mutée = {0}</value>
+  </data>
+  <data name="Log_MuteError" xml:space="preserve">
+    <value>Impossible de muter la TV.</value>
+  </data>
+  <data name="Log_Volume" xml:space="preserve">
+    <value>Volume TV = {0}%</value>
+  </data>
+  <data name="Log_VolumeError" xml:space="preserve">
+    <value>Impossible de modifier le volume de la TV.</value>
+  </data>
+</root>

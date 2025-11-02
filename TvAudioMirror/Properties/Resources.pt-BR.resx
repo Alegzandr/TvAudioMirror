@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="App_Title"><value>TV Audio Mirror</value></data>
+  <data name="Info_Text"><value>Este aplicativo copia o áudio do dispositivo padrão para a primeira saída cujo nome contenha "TV". Se o dispositivo padrão já for uma TV, nada é feito.</value></data>
+  <data name="Label_Source_Unknown"><value>Fonte atual: (desconhecida)</value></data>
+  <data name="Label_Source_Error"><value>Fonte atual: (erro)</value></data>
+  <data name="Label_Source_Value"><value>Fonte atual: {0}</value></data>
+  <data name="Label_Tv_NotFound"><value>TV de destino: (não encontrada)</value></data>
+  <data name="Label_Tv_DefaultIsTV"><value>TV de destino: (o dispositivo padrão já é uma TV)</value></data>
+  <data name="Label_Tv_Value"><value>TV de destino: {0}</value></data>
+  <data name="Button_Mute"><value>Silenciar TV</value></data>
+  <data name="Check_Auto"><value>Atualizar quando o dispositivo padrão mudar</value></data>
+  <data name="Button_SoundSettings"><value>Abrir configurações de som</value></data>
+  <data name="Tray_Open"><value>Abrir</value></data>
+  <data name="Tray_Exit"><value>Sair</value></data>
+  <data name="Confirm_Exit_Title"><value>Confirmar</value></data>
+  <data name="Confirm_Exit_Text"><value>Deseja mesmo fechar o TV Audio Mirror?</value></data>
+  <data name="Log_DefaultChanged"><value>Dispositivo de reprodução padrão alterado: {0}</value></data>
+  <data name="Log_DefaultReadError"><value>Não foi possível ler o dispositivo padrão.</value></data>
+  <data name="Log_DefaultIsTv"><value>O dispositivo padrão já é uma TV. Espelhamento desativado.</value></data>
+  <data name="Log_NoTvFound"><value>Nenhuma saída contendo "TV" foi encontrada. Renomeie-a nas configurações de som.</value></data>
+  <data name="Log_CaptureStarted"><value>Espelhamento iniciado: {0} → {1}</value></data>
+  <data name="Log_CaptureError"><value>Não foi possível iniciar o espelhamento.</value></data>
+  <data name="Log_TimerError"><value>Erro ao verificar dispositivos de áudio.</value></data>
+  <data name="Log_OpenSoundError"><value>Não foi possível abrir as configurações de som.</value></data>
+  <data name="Log_Mute"><value>TV mutada = {0}</value></data>
+  <data name="Log_MuteError"><value>Não foi possível mutar a TV.</value></data>
+  <data name="Log_Volume"><value>Volume da TV = {0}%</value></data>
+  <data name="Log_VolumeError"><value>Não foi possível alterar o volume da TV.</value></data>
+</root>

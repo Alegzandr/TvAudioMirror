@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="App_Title"><value>TV Audio Mirror</value></data>
+  <data name="Info_Text"><value>Diese App spiegelt den Ton des Standard-Wiedergabegeräts auf das erste Ausgabegerät, dessen Name „TV“ enthält. Wenn das Standardgerät bereits ein TV ist, passiert nichts.</value></data>
+  <data name="Label_Source_Unknown"><value>Aktuelle Quelle: (unbekannt)</value></data>
+  <data name="Label_Source_Error"><value>Aktuelle Quelle: (Fehler)</value></data>
+  <data name="Label_Source_Value"><value>Aktuelle Quelle: {0}</value></data>
+  <data name="Label_Tv_NotFound"><value>Ziel-TV: (nicht gefunden)</value></data>
+  <data name="Label_Tv_DefaultIsTV"><value>Ziel-TV: (Standardgerät ist bereits ein TV)</value></data>
+  <data name="Label_Tv_Value"><value>Ziel-TV: {0}</value></data>
+  <data name="Button_Mute"><value>TV stummschalten</value></data>
+  <data name="Check_Auto"><value>Aktualisieren, wenn sich das Standardgerät ändert</value></data>
+  <data name="Button_SoundSettings"><value>Soundeinstellungen öffnen</value></data>
+  <data name="Tray_Open"><value>Öffnen</value></data>
+  <data name="Tray_Exit"><value>Beenden</value></data>
+  <data name="Confirm_Exit_Title"><value>Bestätigen</value></data>
+  <data name="Confirm_Exit_Text"><value>Möchten Sie TV Audio Mirror wirklich schließen?</value></data>
+  <data name="Log_DefaultChanged"><value>Standardwiedergabegerät geändert: {0}</value></data>
+  <data name="Log_DefaultReadError"><value>Standardgerät konnte nicht gelesen werden.</value></data>
+  <data name="Log_DefaultIsTv"><value>Das Standardgerät ist bereits ein TV. Spiegelung ist deaktiviert.</value></data>
+  <data name="Log_NoTvFound"><value>Kein Ausgabegerät mit „TV“ gefunden. Benennen Sie es in den Soundeinstellungen um.</value></data>
+  <data name="Log_CaptureStarted"><value>Spiegelung gestartet: {0} → {1}</value></data>
+  <data name="Log_CaptureError"><value>Spiegelung konnte nicht gestartet werden.</value></data>
+  <data name="Log_TimerError"><value>Fehler beim Prüfen der Audiogeräte.</value></data>
+  <data name="Log_OpenSoundError"><value>Soundeinstellungen konnten nicht geöffnet werden.</value></data>
+  <data name="Log_Mute"><value>TV stumm = {0}</value></data>
+  <data name="Log_MuteError"><value>TV konnte nicht stummgeschaltet werden.</value></data>
+  <data name="Log_Volume"><value>TV-Lautstärke = {0}%</value></data>
+  <data name="Log_VolumeError"><value>TV-Lautstärke konnte nicht geändert werden.</value></data>
+</root>
