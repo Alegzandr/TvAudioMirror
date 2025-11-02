@@ -39,8 +39,6 @@ namespace TvAudioMirror
             this.startInTray = startInTray;
             InitializeComponent();
             InitializeCustomUi();
-            if (this.startInTray)
-                HideToTray();
         }
 
         private void InitializeCustomUi()
@@ -432,6 +430,13 @@ namespace TvAudioMirror
                 trayIcon.Visible = false;
                 trayIcon.Dispose();
             }
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            if (startInTray)
+                HideToTray();
         }
     }
 }

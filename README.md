@@ -62,5 +62,13 @@ This tool does exactly that, automatically, and lives in the tray.
 
 ```bash
 dotnet restore
-dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --self-contained true -o ./publish/win-x64
+```
+
+```bash
+dotnet publish -c Release -r win-x64 ^
+  -p:PublishSingleFile=true ^
+  -p:IncludeNativeLibrariesForSelfExtract=true ^
+  -p:EnableCompressionInSingleFile=true ^
+  --self-contained true ^
+  -o .\publish\win-x64
 ```
