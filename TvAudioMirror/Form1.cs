@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using NAudio.CoreAudioApi;
+using NAudio.CoreAudioApi.Interfaces;
 using NAudio.Wave;
 using TvAudioMirror.Properties;
 
@@ -18,7 +19,6 @@ namespace TvAudioMirror
         private CheckBox? cbAuto;
         private Button? btnSoundSettings;
         private TextBox? txtLog;
-        private System.Windows.Forms.Timer? deviceTimer;
 
         private NotifyIcon? trayIcon;
         private ContextMenuStrip? trayMenu;
@@ -33,6 +33,8 @@ namespace TvAudioMirror
         private BufferedWaveProvider? buffer;
         private readonly object sync = new();
         private bool isClosing;
+
+        private AudioDeviceNotification? notificationClient;
 
         public Form1(bool startInTray = false)
         {
@@ -154,12 +156,15 @@ namespace TvAudioMirror
             catch { trayIcon.Icon = SystemIcons.Application; }
             trayIcon.DoubleClick += (_, _) => ShowFromTray();
 
-            deviceTimer = new System.Windows.Forms.Timer
+            notificationClient = new AudioDeviceNotification(() =>
             {
-                Interval = 1500
-            };
-            deviceTimer.Tick += DeviceTimer_Tick;
-            deviceTimer.Start();
+                if (cbAuto != null && cbAuto.Checked)
+                {
+                    Log("[info] Default device changed → refreshing...");
+                    RefreshDevices();
+                }
+            });
+            enumerator.RegisterEndpointNotificationCallback(notificationClient);
 
             RefreshDevices();
 
@@ -195,24 +200,6 @@ namespace TvAudioMirror
         {
             if (WindowState == FormWindowState.Minimized && minimizeToTray)
                 HideToTray();
-        }
-
-        private void DeviceTimer_Tick(object? sender, EventArgs e)
-        {
-            if (cbAuto is null || !cbAuto.Checked) return;
-            try
-            {
-                var def = GetDefaultRender();
-                if (!SameDevice(def, currentDefault))
-                {
-                    Log(string.Format(Resources.Log_DefaultChanged, def.FriendlyName));
-                    RefreshDevices();
-                }
-            }
-            catch (Exception ex)
-            {
-                Log(Resources.Log_TimerError + " " + ex.Message);
-            }
         }
 
         private MMDevice GetDefaultRender() =>
@@ -422,8 +409,12 @@ namespace TvAudioMirror
             }
 
             isClosing = true;
-            deviceTimer?.Stop();
             StopPipeline();
+
+            if (notificationClient != null)
+            {
+                try { enumerator.UnregisterEndpointNotificationCallback(notificationClient); } catch { }
+            }
 
             if (trayIcon != null)
             {
@@ -438,5 +429,26 @@ namespace TvAudioMirror
             if (startInTray)
                 HideToTray();
         }
+    }
+
+    public class AudioDeviceNotification : IMMNotificationClient
+    {
+        private readonly Action onDefaultChanged;
+
+        public AudioDeviceNotification(Action onDefaultChanged)
+        {
+            this.onDefaultChanged = onDefaultChanged;
+        }
+
+        public void OnDefaultDeviceChanged(DataFlow flow, Role role, string defaultDeviceId)
+        {
+            if (flow == DataFlow.Render && role == Role.Multimedia)
+                onDefaultChanged();
+        }
+
+        public void OnDeviceAdded(string pwstrDeviceId) { }
+        public void OnDeviceRemoved(string pwstrDeviceId) { }
+        public void OnDeviceStateChanged(string pwstrDeviceId, DeviceState newState) { }
+        public void OnPropertyValueChanged(string pwstrDeviceId, PropertyKey key) { }
     }
 }
