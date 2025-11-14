@@ -66,12 +66,5 @@ dotnet restore
 ```
 
 ```bash
-dotnet publish -c Release -r win-x64 ^
-  -p:PublishSingleFile=true ^
-  -p:IncludeNativeLibrariesForSelfExtract=true ^
-  -p:EnableCompressionInSingleFile=true ^
-  --self-contained true ^
-  -o .\publish\win-x64
+dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true --self-contained true -o .\publish\win-x64
 ```
-
-
