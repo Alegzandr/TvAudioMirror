@@ -23,7 +23,8 @@ This tool does exactly that, automatically, and lives in the tray.
 -   ✅ Minimizes to the tray
 -   ✅ Can start **directly in the tray** with `--tray`
 -   ✅ Lightweight, no virtual drivers
--   ✅ Localized (en, fr, es, de, it, pt-BR) via `.resx`
+-   ✅ Localized (en, fr, es, de, it, pt-BR, zh-Hans, ru, ja, ko) via `.resx`
+-   ✅ Tray icon menu offers quick Open / Reload / Exit actions
 -   ✅ Open-source friendly: no designer hell, very few comments, clean code
 
 ---
@@ -72,3 +73,5 @@ dotnet publish -c Release -r win-x64 ^
   --self-contained true ^
   -o .\publish\win-x64
 ```
+
+

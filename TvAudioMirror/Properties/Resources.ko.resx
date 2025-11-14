@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="App_Title"><value>TV Audio Mirror</value></data>
+  <data name="Info_Text"><value>이 앱은 기본 재생 장치의 오디오를 이름에 “TV”가 포함된 첫 번째 출력으로 미러링합니다. 기본 장치가 이미 TV라면 아무 작업도 하지 않습니다.</value></data>
+  <data name="Label_Source_Unknown"><value>현재 소스: (알 수 없음)</value></data>
+  <data name="Label_Source_Error"><value>현재 소스: (오류)</value></data>
+  <data name="Label_Source_Value"><value>현재 소스: {0}</value></data>
+  <data name="Label_Tv_NotFound"><value>대상 TV: (없음)</value></data>
+  <data name="Label_Tv_DefaultIsTV"><value>대상 TV: (기본 장치가 이미 TV)</value></data>
+  <data name="Label_Tv_Value"><value>대상 TV: {0}</value></data>
+  <data name="Button_Mute"><value>TV 음소거</value></data>
+  <data name="Check_Auto"><value>기본 장치 변경 시 자동 새로고침</value></data>
+  <data name="Button_SoundSettings"><value>사운드 설정 열기</value></data>
+  <data name="Tray_Open"><value>열기</value></data>
+  <data name="Tray_Reload"><value>다시 불러오기</value></data>
+  <data name="Tray_Exit"><value>종료</value></data>
+  <data name="Confirm_Exit_Title"><value>확인</value></data>
+  <data name="Confirm_Exit_Text"><value>TV Audio Mirror를 종료하시겠습니까?</value></data>
+  <data name="Log_DefaultChanged"><value>기본 재생 장치가 변경되었습니다: {0}</value></data>
+  <data name="Log_DefaultReadError"><value>기본 재생 장치를 읽을 수 없습니다.</value></data>
+  <data name="Log_DefaultIsTv"><value>기본 재생 장치가 이미 TV입니다. 미러링을 비활성화합니다.</value></data>
+  <data name="Log_NoTvFound"><value>이름에 “TV”가 포함된 출력이 없습니다. 사운드 설정에서 이름을 변경하세요.</value></data>
+  <data name="Log_CaptureStarted"><value>미러링 시작: {0} → {1}</value></data>
+  <data name="Log_CaptureError"><value>미러링을 시작할 수 없습니다.</value></data>
+  <data name="Log_TimerError"><value>오디오 장치를 확인하는 중 오류가 발생했습니다.</value></data>
+  <data name="Log_OpenSoundError"><value>사운드 설정을 열 수 없습니다.</value></data>
+  <data name="Log_Mute"><value>TV 음소거 = {0}</value></data>
+  <data name="Log_MuteError"><value>TV를 음소거할 수 없습니다.</value></data>
+  <data name="Log_Volume"><value>TV 볼륨 = {0}%</value></data>
+  <data name="Log_VolumeError"><value>TV 볼륨을 변경할 수 없습니다.</value></data>
+</root>

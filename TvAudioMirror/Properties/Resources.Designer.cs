@@ -295,6 +295,15 @@ namespace TvAudioMirror.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reload.
+        /// </summary>
+        internal static string Tray_Reload {
+            get {
+                return ResourceManager.GetString("Tray_Reload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open.
         /// </summary>
         internal static string Tray_Open {

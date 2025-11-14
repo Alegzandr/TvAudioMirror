@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="App_Title"><value>TV Audio Mirror</value></data>
+  <data name="Info_Text"><value>このアプリは既定の再生デバイスの音声を、名前に「TV」が含まれる最初の出力にミラーリングします。既定のデバイスがすでにテレビの場合は何も行いません。</value></data>
+  <data name="Label_Source_Unknown"><value>現在のソース：(不明)</value></data>
+  <data name="Label_Source_Error"><value>現在のソース：(エラー)</value></data>
+  <data name="Label_Source_Value"><value>現在のソース：{0}</value></data>
+  <data name="Label_Tv_NotFound"><value>対象のTV：(見つかりません)</value></data>
+  <data name="Label_Tv_DefaultIsTV"><value>対象のTV：(既定のデバイスはすでにTVです)</value></data>
+  <data name="Label_Tv_Value"><value>対象のTV：{0}</value></data>
+  <data name="Button_Mute"><value>TVをミュート</value></data>
+  <data name="Check_Auto"><value>既定のデバイス変更時に自動更新</value></data>
+  <data name="Button_SoundSettings"><value>サウンド設定を開く</value></data>
+  <data name="Tray_Open"><value>開く</value></data>
+  <data name="Tray_Reload"><value>再読み込み</value></data>
+  <data name="Tray_Exit"><value>終了</value></data>
+  <data name="Confirm_Exit_Title"><value>確認</value></data>
+  <data name="Confirm_Exit_Text"><value>TV Audio Mirror を終了しますか？</value></data>
+  <data name="Log_DefaultChanged"><value>既定の再生デバイスが変更されました: {0}</value></data>
+  <data name="Log_DefaultReadError"><value>既定の再生デバイスを読み取れません。</value></data>
+  <data name="Log_DefaultIsTv"><value>既定の再生デバイスはすでにTVです。ミラーリングを無効化します。</value></data>
+  <data name="Log_NoTvFound"><value>名前に「TV」を含む出力が見つかりません。サウンド設定で名前を変更してください。</value></data>
+  <data name="Log_CaptureStarted"><value>ミラーリング開始: {0} → {1}</value></data>
+  <data name="Log_CaptureError"><value>ミラーリングを開始できませんでした。</value></data>
+  <data name="Log_TimerError"><value>オーディオデバイスのポーリング中にエラーが発生しました。</value></data>
+  <data name="Log_OpenSoundError"><value>サウンド設定を開けませんでした。</value></data>
+  <data name="Log_Mute"><value>TVミュート = {0}</value></data>
+  <data name="Log_MuteError"><value>TVをミュートできませんでした。</value></data>
+  <data name="Log_Volume"><value>TV音量 = {0}%</value></data>
+  <data name="Log_VolumeError"><value>TVの音量を変更できませんでした。</value></data>
+</root>

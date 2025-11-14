@@ -12,6 +12,7 @@
   <data name="Check_Auto"><value>Aggiorna quando cambia il dispositivo predefinito</value></data>
   <data name="Button_SoundSettings"><value>Apri impostazioni audio</value></data>
   <data name="Tray_Open"><value>Apri</value></data>
+  <data name="Tray_Reload"><value>Ricarica</value></data>
   <data name="Tray_Exit"><value>Esci</value></data>
   <data name="Confirm_Exit_Title"><value>Conferma</value></data>
   <data name="Confirm_Exit_Text"><value>Vuoi davvero chiudere TV Audio Mirror?</value></data>

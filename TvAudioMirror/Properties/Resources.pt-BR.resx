@@ -12,6 +12,7 @@
   <data name="Check_Auto"><value>Atualizar quando o dispositivo padrão mudar</value></data>
   <data name="Button_SoundSettings"><value>Abrir configurações de som</value></data>
   <data name="Tray_Open"><value>Abrir</value></data>
+  <data name="Tray_Reload"><value>Recarregar</value></data>
   <data name="Tray_Exit"><value>Sair</value></data>
   <data name="Confirm_Exit_Title"><value>Confirmar</value></data>
   <data name="Confirm_Exit_Text"><value>Deseja mesmo fechar o TV Audio Mirror?</value></data>

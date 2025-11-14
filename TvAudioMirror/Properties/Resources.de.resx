@@ -12,6 +12,7 @@
   <data name="Check_Auto"><value>Aktualisieren, wenn sich das Standardgerät ändert</value></data>
   <data name="Button_SoundSettings"><value>Soundeinstellungen öffnen</value></data>
   <data name="Tray_Open"><value>Öffnen</value></data>
+  <data name="Tray_Reload"><value>Neu laden</value></data>
   <data name="Tray_Exit"><value>Beenden</value></data>
   <data name="Confirm_Exit_Title"><value>Bestätigen</value></data>
   <data name="Confirm_Exit_Text"><value>Möchten Sie TV Audio Mirror wirklich schließen?</value></data>

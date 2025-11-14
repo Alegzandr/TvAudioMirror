@@ -36,6 +36,9 @@
   <data name="Tray_Open" xml:space="preserve">
     <value>Ouvrir</value>
   </data>
+  <data name="Tray_Reload" xml:space="preserve">
+    <value>Recharger</value>
+  </data>
   <data name="Tray_Exit" xml:space="preserve">
     <value>Quitter</value>
   </data>

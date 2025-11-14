@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="App_Title"><value>TV Audio Mirror</value></data>
+  <data name="Info_Text"><value>此应用会将默认播放设备的音频镜像到名称包含“TV”的第一个输出。如果默认设备已经是电视，则不会执行任何操作。</value></data>
+  <data name="Label_Source_Unknown"><value>当前来源：(未知)</value></data>
+  <data name="Label_Source_Error"><value>当前来源：(错误)</value></data>
+  <data name="Label_Source_Value"><value>当前来源：{0}</value></data>
+  <data name="Label_Tv_NotFound"><value>目标电视：(未找到)</value></data>
+  <data name="Label_Tv_DefaultIsTV"><value>目标电视：(默认设备已经是电视)</value></data>
+  <data name="Label_Tv_Value"><value>目标电视：{0}</value></data>
+  <data name="Button_Mute"><value>静音电视</value></data>
+  <data name="Check_Auto"><value>默认设备变化时自动刷新</value></data>
+  <data name="Button_SoundSettings"><value>打开声音设置</value></data>
+  <data name="Tray_Open"><value>打开</value></data>
+  <data name="Tray_Reload"><value>重新加载</value></data>
+  <data name="Tray_Exit"><value>退出</value></data>
+  <data name="Confirm_Exit_Title"><value>确认</value></data>
+  <data name="Confirm_Exit_Text"><value>确定要关闭 TV Audio Mirror 吗？</value></data>
+  <data name="Log_DefaultChanged"><value>默认播放设备已更改：{0}</value></data>
+  <data name="Log_DefaultReadError"><value>无法读取默认播放设备。</value></data>
+  <data name="Log_DefaultIsTv"><value>默认播放设备已经是电视。镜像已禁用。</value></data>
+  <data name="Log_NoTvFound"><value>未找到名称包含“TV”的输出。请在声音设置中重命名。</value></data>
+  <data name="Log_CaptureStarted"><value>开始镜像：{0} → {1}</value></data>
+  <data name="Log_CaptureError"><value>无法开始镜像。</value></data>
+  <data name="Log_TimerError"><value>轮询音频设备时出错。</value></data>
+  <data name="Log_OpenSoundError"><value>无法打开声音设置。</value></data>
+  <data name="Log_Mute"><value>电视静音 = {0}</value></data>
+  <data name="Log_MuteError"><value>无法静音电视。</value></data>
+  <data name="Log_Volume"><value>电视音量 = {0}%</value></data>
+  <data name="Log_VolumeError"><value>无法更改电视音量。</value></data>
+</root>

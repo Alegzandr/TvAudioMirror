@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="App_Title"><value>TV Audio Mirror</value></data>
+  <data name="Info_Text"><value>Это приложение зеркалирует звук с устройства воспроизведения по умолчанию на первый выход, в названии которого есть «TV». Если устройство по умолчанию уже телевизор, ничего не происходит.</value></data>
+  <data name="Label_Source_Unknown"><value>Текущий источник: (неизвестно)</value></data>
+  <data name="Label_Source_Error"><value>Текущий источник: (ошибка)</value></data>
+  <data name="Label_Source_Value"><value>Текущий источник: {0}</value></data>
+  <data name="Label_Tv_NotFound"><value>Целевая ТВ: (не найдена)</value></data>
+  <data name="Label_Tv_DefaultIsTV"><value>Целевая ТВ: (устройство по умолчанию уже ТВ)</value></data>
+  <data name="Label_Tv_Value"><value>Целевая ТВ: {0}</value></data>
+  <data name="Button_Mute"><value>Отключить звук ТВ</value></data>
+  <data name="Check_Auto"><value>Автообновление при смене устройства по умолчанию</value></data>
+  <data name="Button_SoundSettings"><value>Открыть настройки звука</value></data>
+  <data name="Tray_Open"><value>Открыть</value></data>
+  <data name="Tray_Reload"><value>Перезагрузить</value></data>
+  <data name="Tray_Exit"><value>Выход</value></data>
+  <data name="Confirm_Exit_Title"><value>Подтверждение</value></data>
+  <data name="Confirm_Exit_Text"><value>Вы действительно хотите закрыть TV Audio Mirror?</value></data>
+  <data name="Log_DefaultChanged"><value>Устройство воспроизведения по умолчанию изменено: {0}</value></data>
+  <data name="Log_DefaultReadError"><value>Не удалось прочитать устройство по умолчанию.</value></data>
+  <data name="Log_DefaultIsTv"><value>Устройство воспроизведения по умолчанию уже ТВ. Зеркалирование отключено.</value></data>
+  <data name="Log_NoTvFound"><value>Не найдено выходов с «TV» в названии. Переименуйте устройство в настройках звука.</value></data>
+  <data name="Log_CaptureStarted"><value>Зеркалирование запущено: {0} → {1}</value></data>
+  <data name="Log_CaptureError"><value>Не удалось запустить зеркалирование.</value></data>
+  <data name="Log_TimerError"><value>Ошибка при опросе аудиоустройств.</value></data>
+  <data name="Log_OpenSoundError"><value>Не удалось открыть настройки звука.</value></data>
+  <data name="Log_Mute"><value>ТВ mute = {0}</value></data>
+  <data name="Log_MuteError"><value>Не удалось отключить звук ТВ.</value></data>
+  <data name="Log_Volume"><value>Громкость ТВ = {0}%</value></data>
+  <data name="Log_VolumeError"><value>Не удалось изменить громкость ТВ.</value></data>
+</root>

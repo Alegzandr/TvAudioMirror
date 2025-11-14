@@ -33,6 +33,7 @@ namespace TvAudioMirror
         private BufferedWaveProvider? buffer;
         private readonly object sync = new();
         private bool isClosing;
+        private volatile bool autoRefreshEnabled = true;
 
         private AudioDeviceNotification? notificationClient;
 
@@ -111,6 +112,8 @@ namespace TvAudioMirror
                 Text = Resources.Check_Auto,
                 Checked = true
             };
+            cbAuto.CheckedChanged += (_, _) => autoRefreshEnabled = cbAuto.Checked;
+            autoRefreshEnabled = cbAuto.Checked;
 
             btnSoundSettings = new Button
             {
@@ -144,6 +147,7 @@ namespace TvAudioMirror
 
             trayMenu = new ContextMenuStrip();
             trayMenu.Items.Add(Resources.Tray_Open, null, (_, _) => ShowFromTray());
+            trayMenu.Items.Add(Resources.Tray_Reload, null, (_, _) => ReloadApplication());
             trayMenu.Items.Add(Resources.Tray_Exit, null, (_, _) => CloseFromTray());
 
             trayIcon = new NotifyIcon
@@ -158,11 +162,11 @@ namespace TvAudioMirror
 
             notificationClient = new AudioDeviceNotification(() =>
             {
-                if (cbAuto != null && cbAuto.Checked)
-                {
-                    Log("[info] Default device changed → refreshing...");
-                    RefreshDevices();
-                }
+                if (isClosing || !autoRefreshEnabled)
+                    return;
+
+                Log("[info] Default device changed - refreshing...");
+                RefreshDevices();
             });
             enumerator.RegisterEndpointNotificationCallback(notificationClient);
 
@@ -196,11 +200,28 @@ namespace TvAudioMirror
             Close();
         }
 
+        private void ReloadApplication()
+        {
+            try
+            {
+                Log("Reloading application...");
+                isClosing = true;
+                Application.Restart();
+                Environment.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                isClosing = false;
+                Log("Reload failed: " + ex.Message);
+            }
+        }
+
         private void Form1_Resize(object? sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Minimized && minimizeToTray)
                 HideToTray();
         }
+
 
         private MMDevice GetDefaultRender() =>
             enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
@@ -235,18 +256,17 @@ namespace TvAudioMirror
                 catch (Exception ex)
                 {
                     Log(Resources.Log_DefaultReadError + " " + ex.Message);
-                    if (lblSource != null) lblSource.Text = Resources.Label_Source_Error;
+                    SetLabelText(lblSource, Resources.Label_Source_Error);
                     return;
                 }
 
                 currentDefault = def;
-                if (lblSource != null)
-                    lblSource.Text = string.Format(Resources.Label_Source_Value, def.FriendlyName);
+                SetLabelText(lblSource, string.Format(Resources.Label_Source_Value, def.FriendlyName));
 
                 if (def.FriendlyName.IndexOf("tv", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     Log(Resources.Log_DefaultIsTv);
-                    if (lblTv != null) lblTv.Text = Resources.Label_Tv_DefaultIsTV;
+                    SetLabelText(lblTv, Resources.Label_Tv_DefaultIsTV);
                     return;
                 }
 
@@ -254,12 +274,12 @@ namespace TvAudioMirror
                 if (tv == null)
                 {
                     Log(Resources.Log_NoTvFound);
-                    if (lblTv != null) lblTv.Text = Resources.Label_Tv_NotFound;
+                    SetLabelText(lblTv, Resources.Label_Tv_NotFound);
                     return;
                 }
 
                 currentTv = tv;
-                if (lblTv != null) lblTv.Text = string.Format(Resources.Label_Tv_Value, tv.FriendlyName);
+                SetLabelText(lblTv, string.Format(Resources.Label_Tv_Value, tv.FriendlyName));
 
                 try
                 {
@@ -284,8 +304,7 @@ namespace TvAudioMirror
             var minBufferBytes = capture.WaveFormat.AverageBytesPerSecond / 15;
             buffer.BufferLength = Math.Max(minBufferBytes, capture.WaveFormat.BlockAlign * 16);
 
-            tvOut = CreateTvOutput(tv);
-            tvOut.Init(buffer);
+            tvOut = CreateTvOutput(tv, buffer);
             tvOut.Play();
 
             capture.DataAvailable += (_, a) =>
@@ -305,26 +324,30 @@ namespace TvAudioMirror
                 try
                 {
                     var vol = tv.AudioEndpointVolume.MasterVolumeLevelScalar;
-                    tbVolume.Value = (int)(vol * 100);
+                    SetTrackBarValue(tbVolume, (int)(vol * 100));
                 }
                 catch { }
             }
         }
 
-        private WasapiOut CreateTvOutput(MMDevice tv)
+        private WasapiOut CreateTvOutput(MMDevice tv, IWaveProvider provider)
         {
+            WasapiOut? exclusive = null;
             try
             {
-                var exclusive = new WasapiOut(tv, AudioClientShareMode.Exclusive, true, 10);
+                exclusive = new WasapiOut(tv, AudioClientShareMode.Exclusive, true, 10);
+                exclusive.Init(provider);
                 Log("Using exclusive audio mode for TV output.");
                 return exclusive;
             }
             catch (Exception ex)
             {
+                try { exclusive?.Dispose(); } catch { }
                 Log("Exclusive audio mode unavailable, falling back to shared mode. " + ex.Message);
             }
 
             var shared = new WasapiOut(tv, AudioClientShareMode.Shared, true, 35);
+            shared.Init(provider);
             Log("Using shared audio mode for TV output.");
             return shared;
         }
@@ -375,6 +398,48 @@ namespace TvAudioMirror
                 {
                     Log(Resources.Log_VolumeError + " " + ex.Message);
                 }
+            }
+        }
+
+        private void SetLabelText(Label? label, string text)
+        {
+            if (label == null) return;
+            if (label.InvokeRequired)
+            {
+                try
+                {
+                    label.BeginInvoke(new Action(() => label.Text = text));
+                }
+                catch (ObjectDisposedException) { }
+                catch (InvalidOperationException) { }
+            }
+            else
+            {
+                label.Text = text;
+            }
+        }
+
+        private void SetTrackBarValue(TrackBar? trackBar, int value)
+        {
+            if (trackBar == null) return;
+            void Apply()
+            {
+                var clamped = Math.Clamp(value, trackBar.Minimum, trackBar.Maximum);
+                trackBar.Value = clamped;
+            }
+
+            if (trackBar.InvokeRequired)
+            {
+                try
+                {
+                    trackBar.BeginInvoke(new Action(Apply));
+                }
+                catch (ObjectDisposedException) { }
+                catch (InvalidOperationException) { }
+            }
+            else
+            {
+                Apply();
             }
         }
 
