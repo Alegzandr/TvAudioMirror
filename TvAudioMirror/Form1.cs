@@ -279,10 +279,12 @@ namespace TvAudioMirror
             buffer = new BufferedWaveProvider(capture.WaveFormat)
             {
                 DiscardOnBufferOverflow = true,
-                BufferDuration = TimeSpan.FromSeconds(3)
+                BufferDuration = TimeSpan.FromMilliseconds(100)
             };
+            var minBufferBytes = capture.WaveFormat.AverageBytesPerSecond / 15;
+            buffer.BufferLength = Math.Max(minBufferBytes, capture.WaveFormat.BlockAlign * 16);
 
-            tvOut = new WasapiOut(tv, AudioClientShareMode.Shared, false, 200);
+            tvOut = CreateTvOutput(tv);
             tvOut.Init(buffer);
             tvOut.Play();
 
@@ -307,6 +309,24 @@ namespace TvAudioMirror
                 }
                 catch { }
             }
+        }
+
+        private WasapiOut CreateTvOutput(MMDevice tv)
+        {
+            try
+            {
+                var exclusive = new WasapiOut(tv, AudioClientShareMode.Exclusive, true, 10);
+                Log("Using exclusive audio mode for TV output.");
+                return exclusive;
+            }
+            catch (Exception ex)
+            {
+                Log("Exclusive audio mode unavailable, falling back to shared mode. " + ex.Message);
+            }
+
+            var shared = new WasapiOut(tv, AudioClientShareMode.Shared, true, 35);
+            Log("Using shared audio mode for TV output.");
+            return shared;
         }
 
         private void StopPipeline()
