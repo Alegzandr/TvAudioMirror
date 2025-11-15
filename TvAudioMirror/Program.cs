@@ -1,8 +1,8 @@
 using System;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using TvAudioMirror.Core.Startup;
 
 namespace TvAudioMirror
 {
@@ -19,9 +19,7 @@ namespace TvAudioMirror
 
             ApplicationConfiguration.Initialize();
 
-            bool startInTray = args.Any(a =>
-                a.Equals("--tray", StringComparison.OrdinalIgnoreCase) ||
-                a.Equals("/tray", StringComparison.OrdinalIgnoreCase));
+            bool startInTray = StartupOptions.ShouldStartInTray(args);
 
             Application.Run(new Form1(startInTray));
         }

@@ -1,11 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using NAudio.CoreAudioApi;
 using NAudio.CoreAudioApi.Interfaces;
 using NAudio.Wave;
+using TvAudioMirror.Core.Audio;
+using TvAudioMirror.Core.Devices;
+using TvAudioMirror.Infrastructure.Processes;
+using TvAudioMirror.Infrastructure.Sound;
 using TvAudioMirror.Properties;
+using TvAudioMirror.UI.Tray;
 
 namespace TvAudioMirror
 {
@@ -23,7 +27,9 @@ namespace TvAudioMirror
         private NotifyIcon? trayIcon;
         private ContextMenuStrip? trayMenu;
         private readonly bool startInTray;
-        private bool minimizeToTray = true;
+        private readonly TrayStateManager trayState;
+        private readonly IProcessLauncher processLauncher;
+        private readonly SoundSettingsLauncher soundSettingsLauncher;
 
         private readonly MMDeviceEnumerator enumerator = new();
         private MMDevice? currentDefault;
@@ -38,8 +44,16 @@ namespace TvAudioMirror
         private AudioDeviceNotification? notificationClient;
 
         public Form1(bool startInTray = false)
+            : this(startInTray, null)
+        {
+        }
+
+        internal Form1(bool startInTray, IProcessLauncher? processLauncher)
         {
             this.startInTray = startInTray;
+            this.processLauncher = processLauncher ?? new ProcessLauncher();
+            trayState = new TrayStateManager(startInTray);
+            soundSettingsLauncher = new SoundSettingsLauncher(this.processLauncher, Log);
             InitializeComponent();
             InitializeCustomUi();
         }
@@ -178,7 +192,7 @@ namespace TvAudioMirror
 
         private void HideToTray()
         {
-            minimizeToTray = true;
+            trayState.HideToTray();
             Hide();
             ShowInTaskbar = false;
             if (trayIcon != null) trayIcon.Visible = true;
@@ -186,6 +200,7 @@ namespace TvAudioMirror
 
         private void ShowFromTray()
         {
+            trayState.ShowFromTray();
             Show();
             WindowState = FormWindowState.Normal;
             ShowInTaskbar = true;
@@ -218,7 +233,7 @@ namespace TvAudioMirror
 
         private void Form1_Resize(object? sender, EventArgs e)
         {
-            if (WindowState == FormWindowState.Minimized && minimizeToTray)
+            if (WindowState == FormWindowState.Minimized && trayState.MinimizeToTray)
                 HideToTray();
         }
 
@@ -229,10 +244,7 @@ namespace TvAudioMirror
         private MMDevice? FindTv()
         {
             var devs = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
-            foreach (var d in devs)
-                if (d.FriendlyName.IndexOf("tv", StringComparison.OrdinalIgnoreCase) >= 0)
-                    return d;
-            return null;
+            return DeviceSelector.FindFirstTv(devs, d => d.FriendlyName);
         }
 
         private static bool SameDevice(MMDevice? a, MMDevice? b)
@@ -263,32 +275,34 @@ namespace TvAudioMirror
                 currentDefault = def;
                 SetLabelText(lblSource, string.Format(Resources.Label_Source_Value, def.FriendlyName));
 
-                if (def.FriendlyName.IndexOf("tv", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    Log(Resources.Log_DefaultIsTv);
-                    SetLabelText(lblTv, Resources.Label_Tv_DefaultIsTV);
-                    return;
-                }
-
+                var defaultInfo = DeviceInfo.FromMmDevice(def);
                 var tv = FindTv();
-                if (tv == null)
-                {
-                    Log(Resources.Log_NoTvFound);
-                    SetLabelText(lblTv, Resources.Label_Tv_NotFound);
-                    return;
-                }
+                var tvInfo = tv != null ? DeviceInfo.FromMmDevice(tv) : (DeviceInfo?)null;
+                var decision = DeviceRefreshDecider.Decide(defaultInfo, tvInfo);
 
-                currentTv = tv;
-                SetLabelText(lblTv, string.Format(Resources.Label_Tv_Value, tv.FriendlyName));
-
-                try
+                switch (decision.Outcome)
                 {
-                    StartPipeline(def, tv);
-                    Log(string.Format(Resources.Log_CaptureStarted, def.FriendlyName, tv.FriendlyName));
-                }
-                catch (Exception ex)
-                {
-                    Log(Resources.Log_CaptureError + " " + ex.Message);
+                    case RefreshOutcome.DefaultIsTv:
+                        Log(Resources.Log_DefaultIsTv);
+                        SetLabelText(lblTv, Resources.Label_Tv_DefaultIsTV);
+                        return;
+                    case RefreshOutcome.TvNotFound:
+                        Log(Resources.Log_NoTvFound);
+                        SetLabelText(lblTv, Resources.Label_Tv_NotFound);
+                        return;
+                    case RefreshOutcome.StartPipeline:
+                        currentTv = tv;
+                        SetLabelText(lblTv, string.Format(Resources.Label_Tv_Value, tv!.FriendlyName));
+                        try
+                        {
+                            StartPipeline(def, tv);
+                            Log(string.Format(Resources.Log_CaptureStarted, def.FriendlyName, tv.FriendlyName));
+                        }
+                        catch (Exception ex)
+                        {
+                            Log(Resources.Log_CaptureError + " " + ex.Message);
+                        }
+                        break;
                 }
             }
         }
@@ -372,9 +386,9 @@ namespace TvAudioMirror
                 if (currentTv == null) return;
                 try
                 {
-                    var vol = currentTv.AudioEndpointVolume;
-                    vol.Mute = !vol.Mute;
-                    Log(string.Format(Resources.Log_Mute, vol.Mute));
+                    var volume = new AudioEndpointVolumeAdapter(currentTv.AudioEndpointVolume);
+                    var muted = EndpointVolumeController.ToggleMute(volume);
+                    Log(string.Format(Resources.Log_Mute, muted));
                 }
                 catch (Exception ex)
                 {
@@ -391,8 +405,9 @@ namespace TvAudioMirror
                 v = Math.Clamp(v, 0f, 1f);
                 try
                 {
-                    currentTv.AudioEndpointVolume.MasterVolumeLevelScalar = v;
-                    Log(string.Format(Resources.Log_Volume, (int)(v * 100)));
+                    var volume = new AudioEndpointVolumeAdapter(currentTv.AudioEndpointVolume);
+                    var percent = EndpointVolumeController.SetVolume(volume, v);
+                    Log(string.Format(Resources.Log_Volume, percent));
                 }
                 catch (Exception ex)
                 {
@@ -445,21 +460,7 @@ namespace TvAudioMirror
 
         private void OpenSoundSettings()
         {
-            try
-            {
-                Process.Start(new ProcessStartInfo("ms-settings:sound") { UseShellExecute = true });
-            }
-            catch
-            {
-                try
-                {
-                    Process.Start(new ProcessStartInfo("mmsys.cpl") { UseShellExecute = true });
-                }
-                catch (Exception ex)
-                {
-                    Log(Resources.Log_OpenSoundError + " " + ex.Message);
-                }
-            }
+            soundSettingsLauncher.Open();
         }
 
         private void Log(string msg)
