@@ -19,17 +19,18 @@ namespace TvAudioMirror.Infrastructure.Sound
         public void Open()
         {
             Exception? lastError = null;
-            if (TryLaunch("ms-settings:sound", ref lastError))
+            string? lastTarget = null;
+            if (TryLaunch("ms-settings:sound", ref lastError, ref lastTarget))
                 return;
 
-            if (TryLaunch("mmsys.cpl", ref lastError))
+            if (TryLaunch("mmsys.cpl", ref lastError, ref lastTarget))
                 return;
 
             if (lastError != null)
-                log(Resources.Log_OpenSoundError + " " + lastError.Message);
+                log($"{Resources.Log_OpenSoundError} ({lastTarget ?? "unknown"}) {lastError.Message}");
         }
 
-        private bool TryLaunch(string target, ref Exception? lastError)
+        private bool TryLaunch(string target, ref Exception? lastError, ref string? lastTarget)
         {
             try
             {
@@ -39,6 +40,7 @@ namespace TvAudioMirror.Infrastructure.Sound
             catch (Exception ex)
             {
                 lastError = ex;
+                lastTarget = target;
                 return false;
             }
         }

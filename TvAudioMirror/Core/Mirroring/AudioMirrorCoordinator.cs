@@ -13,7 +13,7 @@ namespace TvAudioMirror.Core.Mirroring
         private readonly IAudioDeviceCatalog devices;
         private readonly IAudioPipeline pipeline;
         private readonly ILogSink logSink;
-        private readonly object gate = new();
+        private readonly object gate = new(); // serializes pipeline/device mutations
         private readonly Action<LogLevel, string> log;
 
         private AudioDeviceNotification? notificationClient;
@@ -83,7 +83,13 @@ namespace TvAudioMirror.Core.Mirroring
 
         private void OnDefaultDeviceChanged()
         {
-            if (!AutoRefreshEnabled) return;
+            if (!AutoRefreshEnabled)
+            {
+                log(LogLevel.Debug, "Default render device changed but auto-refresh is disabled.");
+                return;
+            }
+
+            log(LogLevel.Debug, "Default render device changed; rebuilding pipeline.");
             RefreshDevices();
         }
 

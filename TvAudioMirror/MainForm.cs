@@ -12,7 +12,7 @@ using TvAudioMirror.UI.Tray;
 
 namespace TvAudioMirror
 {
-    public partial class MainForm : Form
+    public sealed class MainForm : Form
     {
         private Label? lblInfo;
         private Label? lblSource;
@@ -71,7 +71,6 @@ namespace TvAudioMirror
                 this.processLauncher,
                 message => Log(LogLevel.Error, message));
 
-            InitializeComponent();
             InitializeCustomUi();
         }
 
@@ -193,11 +192,11 @@ namespace TvAudioMirror
             {
                 if (cbAuto == null) return;
                 mirrorCoordinator.SetAutoRefresh(cbAuto.Checked);
-                Log(LogLevel.Info, cbAuto.Checked ? "[info] Auto-refresh enabled." : "[info] Auto-refresh disabled.");
+                Log(LogLevel.Info, cbAuto.Checked ? "Auto-refresh enabled." : "Auto-refresh paused.");
             };
 
-            mirrorCoordinator.SetAutoRefresh(cbAuto.Checked);
             mirrorCoordinator.Initialize();
+            mirrorCoordinator.SetAutoRefresh(cbAuto.Checked);
 
             FormClosing += MainForm_FormClosing;
             Resize += MainForm_Resize;

@@ -6,7 +6,6 @@ namespace TvAudioMirror.Core.Audio
 {
     internal interface IAudioPipeline : IDisposable
     {
-        bool IsRunning { get; }
         void Start(MMDevice source, MMDevice target);
         void Stop();
     }
@@ -31,8 +30,6 @@ namespace TvAudioMirror.Core.Audio
             this.tvOutputFactory = tvOutputFactory ?? ((device, shareMode, useEventSync, latencyMs) =>
                 new WasapiOut(device, shareMode, useEventSync, latencyMs));
         }
-
-        public bool IsRunning => capture != null;
 
         public void Start(MMDevice source, MMDevice target)
         {
