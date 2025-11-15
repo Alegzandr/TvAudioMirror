@@ -32,6 +32,9 @@
   <data name="Button_Mute" xml:space="preserve">
     <value>Mute TV</value>
   </data>
+  <data name="Button_Unmute" xml:space="preserve">
+    <value>Unmute TV</value>
+  </data>
   <data name="Check_Auto" xml:space="preserve">
     <value>Auto-refresh when default device changes</value>
   </data>

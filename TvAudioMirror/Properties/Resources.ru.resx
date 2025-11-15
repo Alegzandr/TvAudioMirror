@@ -9,6 +9,7 @@
   <data name="Label_Tv_DefaultIsTV"><value>Целевая ТВ: (устройство по умолчанию уже ТВ)</value></data>
   <data name="Label_Tv_Value"><value>Целевая ТВ: {0}</value></data>
   <data name="Button_Mute"><value>Отключить звук ТВ</value></data>
+  <data name="Button_Unmute"><value>Включить звук ТВ</value></data>
   <data name="Check_Auto"><value>Автообновление при смене устройства по умолчанию</value></data>
   <data name="Button_SoundSettings"><value>Открыть настройки звука</value></data>
   <data name="Tray_Open"><value>Открыть</value></data>

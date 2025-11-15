@@ -9,6 +9,7 @@
   <data name="Label_Tv_DefaultIsTV"><value>目标电视：(默认设备已经是电视)</value></data>
   <data name="Label_Tv_Value"><value>目标电视：{0}</value></data>
   <data name="Button_Mute"><value>静音电视</value></data>
+  <data name="Button_Unmute"><value>取消电视静音</value></data>
   <data name="Check_Auto"><value>默认设备变化时自动刷新</value></data>
   <data name="Button_SoundSettings"><value>打开声音设置</value></data>
   <data name="Tray_Open"><value>打开</value></data>

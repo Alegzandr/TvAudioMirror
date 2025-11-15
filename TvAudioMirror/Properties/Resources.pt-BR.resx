@@ -9,6 +9,7 @@
   <data name="Label_Tv_DefaultIsTV"><value>TV de destino: (o dispositivo padrão já é uma TV)</value></data>
   <data name="Label_Tv_Value"><value>TV de destino: {0}</value></data>
   <data name="Button_Mute"><value>Silenciar TV</value></data>
+  <data name="Button_Unmute"><value>Ativar som da TV</value></data>
   <data name="Check_Auto"><value>Atualizar quando o dispositivo padrão mudar</value></data>
   <data name="Button_SoundSettings"><value>Abrir configurações de som</value></data>
   <data name="Tray_Open"><value>Abrir</value></data>

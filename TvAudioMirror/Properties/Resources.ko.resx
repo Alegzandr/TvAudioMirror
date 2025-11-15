@@ -9,6 +9,7 @@
   <data name="Label_Tv_DefaultIsTV"><value>대상 TV: (기본 장치가 이미 TV)</value></data>
   <data name="Label_Tv_Value"><value>대상 TV: {0}</value></data>
   <data name="Button_Mute"><value>TV 음소거</value></data>
+  <data name="Button_Unmute"><value>TV 음소거 해제</value></data>
   <data name="Check_Auto"><value>기본 장치 변경 시 자동 새로고침</value></data>
   <data name="Button_SoundSettings"><value>사운드 설정 열기</value></data>
   <data name="Tray_Open"><value>열기</value></data>

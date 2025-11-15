@@ -27,6 +27,9 @@
   <data name="Button_Mute" xml:space="preserve">
     <value>Muter la TV</value>
   </data>
+  <data name="Button_Unmute" xml:space="preserve">
+    <value>Activer le son de la TV</value>
+  </data>
   <data name="Check_Auto" xml:space="preserve">
     <value>Actualiser si le périphérique par défaut change</value>
   </data>

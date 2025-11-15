@@ -9,6 +9,7 @@
   <data name="Label_Tv_DefaultIsTV"><value>TV de destino: (el dispositivo predeterminado ya es una TV)</value></data>
   <data name="Label_Tv_Value"><value>TV de destino: {0}</value></data>
   <data name="Button_Mute"><value>Silenciar TV</value></data>
+  <data name="Button_Unmute"><value>Activar sonido de la TV</value></data>
   <data name="Check_Auto"><value>Actualizar cuando cambie el dispositivo predeterminado</value></data>
   <data name="Button_SoundSettings"><value>Abrir configuración de sonido</value></data>
   <data name="Tray_Open"><value>Abrir</value></data>

@@ -1,5 +1,5 @@
 using NAudio.CoreAudioApi;
-using TvAudioMirror;
+using TvAudioMirror.Infrastructure.Sound;
 using Xunit;
 
 namespace TvAudioMirror.Tests

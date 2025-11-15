@@ -21,7 +21,7 @@ namespace TvAudioMirror
 
             bool startInTray = StartupOptions.ShouldStartInTray(args);
 
-            Application.Run(new Form1(startInTray));
+            Application.Run(new MainForm(startInTray));
         }
     }
 }

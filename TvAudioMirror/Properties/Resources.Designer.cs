@@ -77,6 +77,15 @@ namespace TvAudioMirror.Properties {
                 return ResourceManager.GetString("Button_Mute", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unmute TV.
+        /// </summary>
+        internal static string Button_Unmute {
+            get {
+                return ResourceManager.GetString("Button_Unmute", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Open sound settings.

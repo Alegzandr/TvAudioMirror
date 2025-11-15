@@ -9,6 +9,7 @@
   <data name="Label_Tv_DefaultIsTV"><value>対象のTV：(既定のデバイスはすでにTVです)</value></data>
   <data name="Label_Tv_Value"><value>対象のTV：{0}</value></data>
   <data name="Button_Mute"><value>TVをミュート</value></data>
+  <data name="Button_Unmute"><value>TVのミュート解除</value></data>
   <data name="Check_Auto"><value>既定のデバイス変更時に自動更新</value></data>
   <data name="Button_SoundSettings"><value>サウンド設定を開く</value></data>
   <data name="Tray_Open"><value>開く</value></data>
