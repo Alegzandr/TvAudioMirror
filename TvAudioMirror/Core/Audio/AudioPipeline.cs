@@ -45,11 +45,7 @@ namespace TvAudioMirror.Core.Audio
                 BufferDuration = TimeSpan.FromMilliseconds(100)
             };
 
-            var minBufferBytes = capture.WaveFormat.AverageBytesPerSecond / 15;
-            buffer.BufferLength = Math.Max(minBufferBytes, capture.WaveFormat.BlockAlign * 16);
-
             tvOut = CreateTvOutput(target, buffer);
-            tvOut.Play();
 
             capture.DataAvailable += (_, a) =>
             {
@@ -62,6 +58,7 @@ namespace TvAudioMirror.Core.Audio
             };
 
             capture.StartRecording();
+            tvOut.Play();
         }
 
         private WasapiOut CreateTvOutput(MMDevice tv, IWaveProvider provider)
@@ -69,7 +66,7 @@ namespace TvAudioMirror.Core.Audio
             WasapiOut? exclusive = null;
             try
             {
-                exclusive = tvOutputFactory(tv, AudioClientShareMode.Exclusive, true, 10);
+                exclusive = tvOutputFactory(tv, AudioClientShareMode.Exclusive, true, 40);
                 exclusive.Init(provider);
                 log("Using exclusive audio mode for TV output.");
                 return exclusive;
@@ -80,7 +77,7 @@ namespace TvAudioMirror.Core.Audio
                 log("Exclusive audio mode unavailable, falling back to shared mode. " + ex.Message);
             }
 
-            var shared = tvOutputFactory(tv, AudioClientShareMode.Shared, true, 35);
+            var shared = tvOutputFactory(tv, AudioClientShareMode.Shared, true, 60);
             shared.Init(provider);
             log("Using shared audio mode for TV output.");
             return shared;

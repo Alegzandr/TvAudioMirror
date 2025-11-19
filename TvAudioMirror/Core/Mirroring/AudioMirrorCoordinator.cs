@@ -23,6 +23,7 @@ namespace TvAudioMirror.Core.Mirroring
         private AudioMirrorState currentState = AudioMirrorState.Idle();
         private MMDevice? currentTv;
         private bool? currentMute;
+        private DateTime lastRefreshTime = DateTime.MinValue;
 
         public AudioMirrorCoordinator(
             IAudioDeviceCatalog devices,
@@ -102,6 +103,15 @@ namespace TvAudioMirror.Core.Mirroring
             lock (gate)
             {
                 if (disposed) return;
+
+                // Debounce: ignore refreshes within 1 second of last refresh
+                var timeSinceLastRefresh = DateTime.UtcNow - lastRefreshTime;
+                if (timeSinceLastRefresh.TotalMilliseconds < 1000)
+                {
+                    log(LogLevel.Debug, "Refresh skipped (debounce).");
+                    return;
+                }
+                lastRefreshTime = DateTime.UtcNow;
 
                 try
                 {
