@@ -1,0 +1,50 @@
+[package]
+name = "audiomirror"
+version = "1.0.0"
+edition = "2021"
+rust-version = "1.82"
+description = "Duplication de sortie audio a faible latence"
+default-run = "audiomirror"
+
+[lib]
+name = "audiomirror_lib"
+# Desktop only. The staticlib and cdylib outputs the Tauri template carries by
+# default exist for mobile targets, and building them here costs link time for
+# artefacts nothing consumes.
+crate-type = ["rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+tauri-plugin-autostart = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+parking_lot = "0.12"
+crossbeam-queue = "0.3"
+rtrb = "0.3"
+rubato = { version = "4", default-features = false }
+cpal = { version = "0.18", features = ["realtime"] }
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-single-instance = "2"
+
+[features]
+# Backends Linux additionnels. ALSA est utilise par defaut ; activer l'un de ces
+# deux backends expose les sources "monitor" necessaires a la capture systeme.
+linux-pipewire = ["cpal/pipewire"]
+linux-pulseaudio = ["cpal/pulseaudio"]
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
+
+[profile.dev]
+# Les callbacks audio non optimises produisent des coupures audibles en debug.
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3

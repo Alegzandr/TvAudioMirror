@@ -1,0 +1,1 @@
+{"default":{"identifier":"default","description":"Surface minimale : le frontend ne parle au systeme qu'a travers les commandes du moteur.","local":true,"windows":["main"],"permissions":["core:default"]}}

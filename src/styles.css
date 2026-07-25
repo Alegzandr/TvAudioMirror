@@ -1,0 +1,662 @@
+/* AudioMirror. A system panel: it wears whatever the operating system wears.
+   Both themes are authored, neither is an inversion of the other. */
+
+:root {
+  color-scheme: light dark;
+
+  --accent: oklch(0.52 0.11 65);
+  --accent-quiet: oklch(0.94 0.028 70);
+  --danger: oklch(0.52 0.16 25);
+
+  --surface: oklch(0.985 0.003 70);
+  --surface-raised: oklch(0.998 0.002 70);
+  --surface-sunken: oklch(0.955 0.004 70);
+  --line: oklch(0.9 0.005 70);
+  --line-strong: oklch(0.83 0.006 70);
+
+  --text: oklch(0.28 0.012 70);
+  --text-muted: oklch(0.51 0.009 70);
+  --text-faint: oklch(0.64 0.008 70);
+
+  --meter-track: oklch(0.9 0.005 70);
+  --meter-fill: oklch(0.6 0.02 70);
+
+  --step-0: 0.6875rem;
+  --step-1: 0.75rem;
+  --step-2: 0.8125rem;
+  --step-3: 0.9375rem;
+  --step-4: 1.25rem;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --quick: 150ms var(--ease);
+
+  --radius: 5px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: oklch(0.76 0.11 72);
+    --accent-quiet: oklch(0.31 0.038 70);
+    --danger: oklch(0.68 0.15 25);
+
+    --surface: oklch(0.19 0.006 70);
+    --surface-raised: oklch(0.228 0.006 70);
+    --surface-sunken: oklch(0.163 0.006 70);
+    --line: oklch(0.3 0.008 70);
+    --line-strong: oklch(0.4 0.009 70);
+
+    --text: oklch(0.93 0.006 70);
+    --text-muted: oklch(0.7 0.009 70);
+    --text-faint: oklch(0.56 0.009 70);
+
+    --meter-track: oklch(0.29 0.008 70);
+    --meter-fill: oklch(0.72 0.02 70);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: var(--step-2);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+button,
+select,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-radius: 3px;
+}
+
+/* Numbers that update many times a second must not shift their neighbours. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Header ------------------------------------------------------------ */
+
+.titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-sunken);
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+/* The window title already carries the application name; repeating it here
+   would spend the most prominent line on something the user cannot act on.
+   It states what the mirror is doing instead. */
+.state-line {
+  margin: 0;
+  font-size: var(--step-3);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.state-line[data-tone="failed"] {
+  color: var(--danger);
+}
+
+.headline {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--step-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- Master switch ----------------------------------------------------- */
+
+.switch {
+  flex: none;
+  width: 38px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 11px;
+  background: var(--surface-raised);
+  cursor: pointer;
+  transition: background var(--quick), border-color var(--quick);
+}
+
+.switch::before {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin-left: 3px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  transition: transform var(--quick), background var(--quick);
+}
+
+.switch:hover {
+  border-color: var(--text-faint);
+}
+
+.switch[aria-checked="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.switch[aria-checked="true"]::before {
+  background: var(--surface-raised);
+  transform: translateX(16px);
+}
+
+/* ---- Sections ---------------------------------------------------------- */
+
+main {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.section {
+  padding: 12px 14px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: var(--step-0);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.section-note {
+  font-size: var(--step-0);
+  color: var(--text-faint);
+}
+
+/* ---- Form controls ----------------------------------------------------- */
+
+select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+  cursor: pointer;
+  transition: border-color var(--quick);
+}
+
+select:hover:not(:disabled) {
+  border-color: var(--text-faint);
+}
+
+select:disabled {
+  cursor: default;
+  color: var(--text-faint);
+  background: var(--surface-sunken);
+}
+
+.button {
+  padding: 5px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+  cursor: pointer;
+  transition: border-color var(--quick), background var(--quick);
+}
+
+.button:hover:not(:disabled) {
+  border-color: var(--text-faint);
+}
+
+.button:active:not(:disabled) {
+  background: var(--surface-sunken);
+}
+
+.button:disabled {
+  color: var(--text-faint);
+  cursor: default;
+}
+
+.button.quiet {
+  border-color: transparent;
+  background: none;
+  color: var(--text-muted);
+  padding: 3px 6px;
+  font-size: var(--step-1);
+}
+
+.button.quiet:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--line);
+}
+
+.button.wide {
+  width: 100%;
+  text-align: left;
+}
+
+/* ---- Source ------------------------------------------------------------ */
+
+.readout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  min-height: 16px;
+}
+
+.facts {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: var(--step-1);
+  white-space: nowrap;
+}
+
+.facts span + span::before {
+  content: "·";
+  margin-right: 6px;
+  color: var(--text-faint);
+}
+
+/* ---- Meter -------------------------------------------------------------
+   Level reads as occupation, not as colour: no green-to-red ramp, no
+   segments. The accent appears only as a hairline at the recent peak. */
+
+.meter {
+  position: relative;
+  /* Fixed width, pushed right: every meter in the panel lines up in one
+     column, which is what makes them comparable at a glance. */
+  flex: 0 1 148px;
+  margin-left: auto;
+  min-width: 48px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--meter-track);
+  overflow: hidden;
+  /* Lets the peak marker travel in container-relative units, so it moves on
+     the compositor instead of relaying out on every frame. */
+  container-type: inline-size;
+}
+
+.meter i {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: var(--meter-fill);
+  will-change: transform;
+}
+
+.meter b {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  transform: translateX(0);
+  background: var(--accent);
+  opacity: 0;
+  will-change: transform;
+}
+
+/* ---- Destination list -------------------------------------------------- */
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 8px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.row:first-child {
+  border-top: 1px solid var(--line);
+}
+
+.row-name {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+
+.row-name strong {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.link {
+  flex: none;
+  font-size: var(--step-0);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.remove {
+  grid-column: 2;
+  grid-row: 1;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 3px;
+  background: none;
+  color: var(--text-faint);
+  font-size: var(--step-3);
+  line-height: 1;
+  cursor: pointer;
+  transition: color var(--quick), background var(--quick);
+}
+
+.remove:hover {
+  color: var(--text);
+  background: var(--surface-sunken);
+}
+
+.row-state {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: var(--step-1);
+}
+
+.row-state .status {
+  white-space: nowrap;
+}
+
+.row[data-state="failed"] .status {
+  color: var(--danger);
+}
+
+.row[data-state="live"] .status {
+  color: var(--text);
+}
+
+.row-controls {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.gain {
+  flex: 1;
+  min-width: 60px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  background: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.gain::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--meter-track);
+}
+
+.gain::-moz-range-track {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--meter-track);
+}
+
+.gain::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  margin-top: -4px;
+  border: none;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: background var(--quick);
+}
+
+.gain::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: none;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.gain:hover::-webkit-slider-thumb {
+  background: var(--text);
+}
+
+.gain:hover::-moz-range-thumb {
+  background: var(--text);
+}
+
+.gain:disabled {
+  cursor: default;
+}
+
+.gain-value {
+  width: 52px;
+  text-align: right;
+  color: var(--text-muted);
+  font-size: var(--step-1);
+}
+
+/* Muted keeps its level visible but stops asserting it. */
+.row[data-muted="true"] .gain-value,
+.row[data-muted="true"] .meter {
+  opacity: 0.45;
+}
+
+.mute {
+  flex: none;
+  padding: 2px 7px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: none;
+  color: var(--text-muted);
+  font-size: var(--step-0);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color var(--quick), border-color var(--quick);
+}
+
+.mute:hover {
+  color: var(--text);
+  border-color: var(--line);
+}
+
+.mute[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ---- Empty states ------------------------------------------------------ */
+
+.empty {
+  padding: 10px 0 12px;
+  color: var(--text-muted);
+  font-size: var(--step-1);
+  max-width: 60ch;
+}
+
+/* ---- Disclosure regions ------------------------------------------------
+   Height is not animated, only the content fades in. A panel this small has
+   nothing to gain from watching itself grow. */
+
+.picker {
+  margin-top: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+  overflow: hidden;
+  animation: settle 150ms var(--ease);
+}
+
+.picker button {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--quick);
+}
+
+.picker button:last-child {
+  border-bottom: none;
+}
+
+.picker button:hover {
+  background: var(--surface-sunken);
+}
+
+.picker .link {
+  margin-left: 6px;
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---- Footer ------------------------------------------------------------ */
+
+.statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 14px;
+  border-top: 1px solid var(--line);
+  background: var(--surface-sunken);
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--step-1);
+  color: var(--text-muted);
+}
+
+.field select {
+  width: auto;
+  padding: 3px 6px;
+  font-size: var(--step-1);
+}
+
+.latency-ms {
+  width: 58px;
+  padding: 3px 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+  font-size: var(--step-1);
+  text-align: right;
+}
+
+.settings {
+  padding: 12px 14px;
+  border-top: 1px solid var(--line);
+  background: var(--surface-sunken);
+  animation: settle 150ms var(--ease);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  cursor: pointer;
+}
+
+.check input {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.check span {
+  font-size: var(--step-1);
+}
+
+.path {
+  margin-top: 8px;
+  color: var(--text-faint);
+  font-size: var(--step-0);
+  word-break: break-all;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "AudioMirror",
+  "version": "1.0.0",
+  "identifier": "dev.audiomirror.app",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "title": "AudioMirror",
+        "label": "main",
+        "width": 460,
+        "height": 580,
+        "minWidth": 400,
+        "minHeight": 420,
+        "resizable": true,
+        "maximizable": false,
+        "center": true,
+        "visible": false,
+        "decorations": true,
+        "shadow": true,
+        "theme": null
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "app", "dmg", "appimage", "deb"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "category": "Utility",
+    "shortDescription": "Duplication de sortie audio",
+    "longDescription": "Duplique une sortie audio vers autant de peripheriques que voulu, avec correction de derive d'horloge et reconnexion automatique.",
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    },
+    "linux": {
+      "deb": {
+        "depends": ["libasound2"]
+      }
+    }
+  }
+}
