@@ -43,6 +43,11 @@ const INTERFACE_LABELS: Record<string, string> = {
 /** Floor of the meter scale. Below this, silence and near-silence look alike. */
 const METER_FLOOR_DB = 60;
 
+/** Bounds of the custom buffer, mirroring what the engine clamps to. */
+const MIN_CUSTOM_MS = 3;
+const MAX_CUSTOM_MS = 250;
+const DEFAULT_CUSTOM_MS = 18;
+
 let catalog: DeviceCatalog = {
   sources: [],
   targets: [],
@@ -126,14 +131,18 @@ app.innerHTML = `
     </label>
     <div class="field">
       <span class="field" id="latency-custom" hidden>
-        <input class="latency-ms tabular" id="latency-ms" type="number" min="3" max="250" step="1" aria-label="Buffer in milliseconds" />
+        <input class="latency-ms tabular" id="latency-ms" type="number" min="${MIN_CUSTOM_MS}" max="${MAX_CUSTOM_MS}" step="1" aria-label="Buffer in milliseconds" />
         ms
       </span>
-      <button class="button quiet" id="settings-toggle" aria-expanded="false">Settings</button>
+      <button class="button quiet disclosure" id="settings-toggle" aria-expanded="false" aria-controls="settings">Settings<span class="chevron" aria-hidden="true"></span></button>
     </div>
   </footer>
 
   <div class="settings" id="settings" hidden>
+    <div class="section-head">
+      <h2>Settings</h2>
+      <button class="button quiet" id="settings-close">Close</button>
+    </div>
     <label class="check"><input type="checkbox" id="pref-autostart" /><span>Start with the session</span></label>
     <label class="check"><input type="checkbox" id="pref-minimized" /><span>Start minimised to the tray</span></label>
     <label class="check"><input type="checkbox" id="pref-tray" /><span>Closing the window keeps it running</span></label>
@@ -161,6 +170,7 @@ const el = {
   latencyMs: byId<HTMLInputElement>("latency-ms"),
   latencyCustom: byId<HTMLSpanElement>("latency-custom"),
   settingsToggle: byId<HTMLButtonElement>("settings-toggle"),
+  settingsClose: byId<HTMLButtonElement>("settings-close"),
   settings: byId<HTMLDivElement>("settings"),
   settingsPath: byId<HTMLParagraphElement>("settings-path"),
   autostart: byId<HTMLInputElement>("pref-autostart"),
@@ -524,10 +534,27 @@ function renderLatency() {
   el.latency.value = config.latency;
 
   const custom = config.latency === "custom";
+  // Hiding the box while it holds the focus would strand it on an element that
+  // just went away, and the blur that follows would report a value the profile
+  // no longer uses.
+  if (!custom && document.activeElement === el.latencyMs) el.latency.focus();
   el.latencyCustom.hidden = !custom;
   if (custom && document.activeElement !== el.latencyMs) {
-    el.latencyMs.value = String(config.latencyMs || 18);
+    el.latencyMs.value = String(config.latencyMs || DEFAULT_CUSTOM_MS);
   }
+}
+
+/** Reads the millisecond box within the bounds the engine enforces, and writes
+ *  the result back, so what is displayed and what is sent are one number.
+ *  Rewriting it also clears the field's pending edit, which is what would
+ *  otherwise reach the engine as a late `change` once the field is gone. */
+function commitCustomMs(): number {
+  const ms = Math.min(
+    MAX_CUSTOM_MS,
+    Math.max(MIN_CUSTOM_MS, Math.round(Number(el.latencyMs.value)) || DEFAULT_CUSTOM_MS),
+  );
+  el.latencyMs.value = String(ms);
+  return ms;
 }
 
 /** Says so when the engine could not honour the requested buffer, rather than
@@ -652,21 +679,48 @@ el.targets.addEventListener("input", (event) => {
 
 el.latency.addEventListener("change", () => {
   const profile = el.latency.value as LatencyProfile;
-  config = { ...config, latency: profile };
+  // Leaving custom carries the box's content along, rather than leaving the box
+  // to report it separately: two settings in flight at once can reach the
+  // engine in either order, and the one saying "custom" winning would put the
+  // profile straight back where it was. Entering custom takes the stored value,
+  // which is the one the box is about to display.
+  const ms = config.latency === "custom" ? commitCustomMs() : config.latencyMs || DEFAULT_CUSTOM_MS;
+  config = { ...config, latency: profile, latencyMs: ms };
   renderLatency();
-  void api.setLatency(profile, Number(el.latencyMs.value) || 18);
+  void api.setLatency(profile, ms);
 });
 
 el.latencyMs.addEventListener("change", () => {
-  const ms = Math.min(250, Math.max(3, Number(el.latencyMs.value) || 18));
-  el.latencyMs.value = String(ms);
+  // A blur delivers this after the fact, by which time the profile may have
+  // moved on. Sending it then would drag it back to custom.
+  if (config.latency !== "custom") return;
+  const ms = commitCustomMs();
+  config = { ...config, latencyMs: ms };
   void api.setLatency("custom", ms);
 });
 
-el.settingsToggle.addEventListener("click", () => {
-  settingsOpen = !settingsOpen;
-  el.settings.hidden = !settingsOpen;
-  el.settingsToggle.setAttribute("aria-expanded", String(settingsOpen));
+function setSettingsOpen(open: boolean) {
+  settingsOpen = open;
+  el.settings.hidden = !open;
+  el.settingsToggle.setAttribute("aria-expanded", String(open));
+  el.settingsToggle.classList.toggle("is-open", open);
+  // Closing from inside the panel would otherwise strand the keyboard focus on
+  // an element that just went away.
+  if (!open && el.settings.contains(document.activeElement)) el.settingsToggle.focus();
+}
+
+el.settingsToggle.addEventListener("click", () => setSettingsOpen(!settingsOpen));
+
+el.settingsClose.addEventListener("click", () => setSettingsOpen(false));
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  if (settingsOpen) {
+    setSettingsOpen(false);
+  } else if (pickerOpen) {
+    pickerOpen = false;
+    renderPicker();
+  }
 });
 
 for (const [input, key] of [

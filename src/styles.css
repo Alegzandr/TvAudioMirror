@@ -290,6 +290,33 @@ select:disabled {
   text-align: left;
 }
 
+/* A toggle has to wear its state, otherwise the only way to learn what a second
+   click does is to spend one. */
+.button.quiet.is-open {
+  color: var(--text);
+  border-color: var(--line);
+  background: var(--surface-raised);
+}
+
+.disclosure {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.disclosure .chevron {
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-1px) rotate(45deg);
+  transition: transform var(--quick);
+}
+
+.disclosure.is-open .chevron {
+  transform: translateY(1px) rotate(225deg);
+}
+
 /* ---- Source ------------------------------------------------------------ */
 
 .readout {
