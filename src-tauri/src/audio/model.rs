@@ -143,6 +143,10 @@ pub struct TargetStatus {
     pub capture_ms: f32,
     pub buffer_ms: f32,
     pub render_ms: f32,
+    /// Buffer target the engine actually planned for. It can exceed what was
+    /// requested: capture arrives in whole blocks, and a target below one of
+    /// those would stutter no matter what.
+    pub buffer_target_ms: f32,
     /// Clock correction currently applied, in parts per million.
     pub correction_ppm: i32,
     pub underruns: u64,
@@ -159,6 +163,10 @@ pub struct EngineStatus {
     pub targets: Vec<TargetStatus>,
     /// True as soon as at least one destination is rendering.
     pub mirroring: bool,
+    /// Buffer the current latency setting asks for, in milliseconds. Reported
+    /// so the interface can compare it against what was actually planned,
+    /// without restating the profile table.
+    pub requested_buffer_ms: u32,
 }
 
 /// Counters shared between a destination's audio callbacks and the engine.

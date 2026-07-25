@@ -354,7 +354,12 @@ impl Engine {
             }
 
             Command::Rescan => {
-                self.scan();
+                // Forced: this is also how a freshly loaded interface asks for
+                // everything again, so it must republish even when nothing on
+                // the system has changed.
+                self.scan_inner(true);
+                self.published.clear();
+                self.announce_config();
                 false
             }
 
@@ -374,10 +379,14 @@ impl Engine {
 
     /// Re-enumerates devices and reports the list when it changed.
     fn scan(&mut self) {
+        self.scan_inner(false);
+    }
+
+    fn scan_inner(&mut self, force: bool) {
         self.last_scan = Some(Instant::now());
 
         let present = device::present_ids(&self.host);
-        if present == self.present {
+        if present == self.present && !force {
             return;
         }
         self.present = present;
@@ -833,6 +842,9 @@ impl Engine {
                     capture_ms: stage_capture,
                     buffer_ms,
                     render_ms,
+                    buffer_target_ms: sink
+                        .map(|sink| frames_to_ms(sink.target_frames as u32, source_rate))
+                        .unwrap_or(0.0),
                     correction_ppm: sink
                         .map(|sink| sink.telemetry.correction_ppm.load(Ordering::Relaxed))
                         .unwrap_or(0),
@@ -851,6 +863,7 @@ impl Engine {
         EngineStatus {
             enabled: self.config.enabled,
             mirroring: targets.iter().any(|target| target.state == LinkState::Live),
+            requested_buffer_ms: self.config.buffer_ms(),
             source,
             targets,
         }

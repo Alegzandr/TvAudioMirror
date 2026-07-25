@@ -54,6 +54,7 @@ export interface TargetStatus {
   captureMs: number;
   bufferMs: number;
   renderMs: number;
+  bufferTargetMs: number;
   correctionPpm: number;
   underruns: number;
   overruns: number;
@@ -66,6 +67,7 @@ export interface EngineStatus {
   source: SourceStatus | null;
   targets: TargetStatus[];
   mirroring: boolean;
+  requestedBufferMs: number;
 }
 
 export interface TargetConfig {

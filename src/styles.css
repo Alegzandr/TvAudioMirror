@@ -58,6 +58,12 @@
   box-sizing: border-box;
 }
 
+/* A class that sets `display` outranks the browser's own rule for [hidden],
+   which would silently leave hidden elements on screen. */
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   height: 100%;
@@ -215,6 +221,11 @@ main {
 .section-note {
   font-size: var(--step-0);
   color: var(--text-faint);
+}
+
+.help:not(:empty) {
+  cursor: help;
+  border-bottom: 1px dotted var(--line-strong);
 }
 
 /* ---- Form controls ----------------------------------------------------- */

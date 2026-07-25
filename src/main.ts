@@ -60,6 +60,7 @@ let status: EngineStatus = {
   source: null,
   targets: [],
   mirroring: false,
+  requestedBufferMs: 18,
 };
 let preferences: Preferences = {
   startMinimized: false,
@@ -121,6 +122,7 @@ app.innerHTML = `
     <label class="field">
       Latency
       <select id="latency"></select>
+      <span class="section-note help tabular" id="latency-note"></span>
     </label>
     <div class="field">
       <span class="field" id="latency-custom" hidden>
@@ -155,6 +157,7 @@ const el = {
   add: byId<HTMLButtonElement>("add"),
   picker: byId<HTMLDivElement>("picker"),
   latency: byId<HTMLSelectElement>("latency"),
+  latencyNote: byId<HTMLSpanElement>("latency-note"),
   latencyMs: byId<HTMLInputElement>("latency-ms"),
   latencyCustom: byId<HTMLSpanElement>("latency-custom"),
   settingsToggle: byId<HTMLButtonElement>("settings-toggle"),
@@ -293,6 +296,7 @@ function latencyBreakdown(target: TargetStatus): string {
     `Capture block ${target.captureMs.toFixed(1)} ms, ` +
     `buffer ${target.bufferMs.toFixed(1)} ms, ` +
     `render block ${target.renderMs.toFixed(1)} ms. ` +
+    `Buffer target ${target.bufferTargetMs.toFixed(1)} ms. ` +
     `Only the buffer follows the latency setting; the blocks are set by the audio system.` +
     (target.correctionPpm !== 0
       ? ` Clock correction ${target.correctionPpm > 0 ? "+" : ""}${target.correctionPpm} ppm.`
@@ -446,10 +450,6 @@ function renderTargets() {
     registerMeter(row.dataset.id!, row.querySelector(".meter")!);
   }
 
-  el.targetsEmpty.hidden = config.targets.length > 0;
-  el.targetsEmpty.textContent =
-    "Nothing is being duplicated yet. Add an output below and it starts as soon as the source plays.";
-
   updateTargets();
 }
 
@@ -457,6 +457,13 @@ function updateTargets() {
   el.targetCount.textContent = config.targets.length
     ? `${config.targets.length} of ${platform.maxTargets}`
     : "";
+
+  // Kept out of the rebuild branch on purpose: an empty list produces an empty
+  // signature, which matches the initial one, so the branch never runs on a
+  // first launch, which is exactly when this text is needed.
+  el.targetsEmpty.hidden = config.targets.length > 0;
+  el.targetsEmpty.textContent =
+    "Nothing is being duplicated yet. Add an output below and it starts as soon as the source plays.";
 
   for (const row of el.targets.querySelectorAll<HTMLLIElement>(".row")) {
     const id = row.dataset.id!;
@@ -521,6 +528,28 @@ function renderLatency() {
   if (custom && document.activeElement !== el.latencyMs) {
     el.latencyMs.value = String(config.latencyMs || 18);
   }
+}
+
+/** Says so when the engine could not honour the requested buffer, rather than
+ *  leaving the user to wonder why 3 ms reads as 36 ms. */
+function renderLatencyNote() {
+  const planned = status.targets
+    .filter((target) => target.bufferTargetMs > 0)
+    .map((target) => target.bufferTargetMs);
+
+  if (planned.length === 0) {
+    el.latencyNote.textContent = "";
+    el.latencyNote.title = "";
+    return;
+  }
+
+  const held = Math.max(...planned);
+  const raised = held > status.requestedBufferMs + 1;
+
+  el.latencyNote.textContent = raised ? `held at ${held.toFixed(0)} ms` : "";
+  el.latencyNote.title = raised
+    ? `The audio system hands over capture in whole blocks. A buffer shorter than one of those would run dry every cycle, whatever the drift correction did, so the engine holds it at ${held.toFixed(0)} ms.`
+    : "";
 }
 
 function renderPreferences() {
@@ -669,23 +698,16 @@ document.addEventListener("visibilitychange", () => {
 registerMeter("source", el.sourceMeter);
 
 void (async () => {
-  const snapshot = await api.bootstrap();
-  catalog = snapshot.catalog;
-  config = snapshot.config;
-  status = snapshot.status;
-  preferences = snapshot.preferences;
-  platform = snapshot.platform;
-
-  renderSourceChoices();
-  renderLatency();
-  renderPreferences();
-  render();
-
+  // Listeners first. The engine publishes its device list once, on its first
+  // scan, and that can happen before the web view has finished loading:
+  // subscribing after the snapshot would lose it and leave the panel convinced
+  // the machine has no audio devices.
   await events.status((next) => {
     status = next;
     renderHeader();
     renderSourceFacts();
     renderTargets();
+    renderLatencyNote();
     if (next.source) feedMeter("source", next.source.rms, next.source.peak);
   });
 
@@ -704,4 +726,21 @@ void (async () => {
     renderTargets();
     if (pickerOpen) renderPicker();
   });
+
+  const snapshot = await api.bootstrap();
+  catalog = snapshot.catalog;
+  config = snapshot.config;
+  status = snapshot.status;
+  preferences = snapshot.preferences;
+  platform = snapshot.platform;
+
+  renderSourceChoices();
+  renderLatency();
+  renderPreferences();
+  renderLatencyNote();
+  render();
+
+  // The snapshot may predate an event that arrived while it was in flight.
+  // Asking for a forced republish settles the two into one consistent state.
+  await api.rescan();
 })();
